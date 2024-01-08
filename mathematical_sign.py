@@ -299,7 +299,7 @@ class Tilda(MathematicalSign):
         :param num2: None!!!!
         :return: tilda of operand
         """
-        return ~num1
+        return -1 * num1
 
 
 class Factorial(MathematicalSign):
@@ -329,9 +329,6 @@ def get_operator(sign: str) -> MathematicalSign:
     :param sign: sign of operator
     :return: the object representation of the sign
     """
-    if len(sign) > 1:
-        print("must be a char")
-        raise ValueError()
     match sign:
         case '+':
             return Plus()
@@ -355,3 +352,4 @@ def get_operator(sign: str) -> MathematicalSign:
             return Tilda()
         case '!':
             return Factorial()
+    raise ValueError()
