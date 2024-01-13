@@ -25,12 +25,6 @@ class MathematicalSign:
         except TypeError as err:
             print("Could not change sign")
             print(err)
-        if ((sign != '+' and sign != '-' and sign != '*' and sign != '/'
-             and sign != '^' and sign != '@' and sign != '$'
-             and sign != '&' and sign != '%' and sign != '~' and sign != '!')
-                or (len(sign) != 1)):
-            print("Could not change sign, please enter valid sign, one character only")
-            raise ValueError()
         else:
             self._sign = sign
 
@@ -293,7 +287,7 @@ class Tilda(MathematicalSign):
         super().__init__('~', 6, 'left')
 
     @staticmethod
-    def do_action(num1: int, num2: None) -> float:
+    def do_action(num1: float, num2: None) -> float:
         """
         :param num1: operand
         :param num2: None!!!!
@@ -309,10 +303,10 @@ class Factorial(MathematicalSign):
         """
         set parameters according to the attributions of factorial
         """
-        MathematicalSign.__init__(self, '!', 6, 'right')
+        super().__init__('!', 6, 'right')
 
     @staticmethod
-    def do_action(num1: int, num2: None) -> float:
+    def do_action(num1: float, num2: None) -> float:
         """
         :param num1: operand
         :param num2: None!!!!
@@ -322,6 +316,21 @@ class Factorial(MathematicalSign):
         for i in range(1, num1 + 1):
             fac *= i
         return fac
+
+
+class HashTag(MathematicalSign):
+    def __init__(self):
+        super().__init__('#', 6, 'right')
+
+    @staticmethod
+    def do_action(num1: float, num2: None) -> float:
+        num1 = str(num1)
+        sum_of_digit = 0
+        for digit in num1:
+            if digit.isnumeric():
+                digit = float(digit)
+                sum_of_digit += digit
+        return sum_of_digit
 
 
 def get_operator(sign: str) -> MathematicalSign:
@@ -352,4 +361,14 @@ def get_operator(sign: str) -> MathematicalSign:
             return Tilda()
         case '!':
             return Factorial()
+        case '#':
+            return HashTag()
     raise ValueError()
+
+
+def is_operator(sign: str) -> bool:
+    if (sign == '+' or sign == '-' or sign == '*' or sign == '/' or sign == '^'
+            or sign == '@' or sign == '$' or sign == '&' or sign == '%' or sign == '%' or sign == '~' or sign == '!'
+            or sign == '#'):
+        return True
+    return False

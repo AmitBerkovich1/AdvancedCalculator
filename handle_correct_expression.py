@@ -7,7 +7,7 @@ def calculate_unary(operands: list, operator: mathematical_sign.MathematicalSign
     :param operator: action
     :return: action on the operand
     """
-    return operator.do_action(int(operands.pop()), None)
+    return operator.do_action(float(operands.pop()), None)
 
 
 def calculate_binary(operands: list, operator: mathematical_sign.MathematicalSign) -> float:
@@ -16,7 +16,8 @@ def calculate_binary(operands: list, operator: mathematical_sign.MathematicalSig
     :param operator: action
     :return: action on the operand
     """
-    return operator.do_action(float(operands.pop()), float(operands.pop()))
+    op1 = float(operands.pop())
+    return operator.do_action(float(operands.pop()), op1)
 
 
 def infix_to_postfix(infix: str) -> list:
@@ -47,7 +48,7 @@ def infix_to_postfix(infix: str) -> list:
                 postfix.append(number)
             number = ''
         else:
-            if m.get_direction() == 'right':
+            if m.get_direction() == "right":
                 postfix.append(m.get_sign())
             elif not stack or '(' in stack or m.get_power() > stack[-1].get_power():
                 stack.append(m)
@@ -83,7 +84,5 @@ def calculate_postfix(postfix: list) -> float:
     return stack.pop()
 
 
-my_infix = "-5+2"
-post = infix_to_postfix(my_infix)
-print(post)
-print(calculate_postfix(infix_to_postfix(my_infix)))
+#my_infix = "5+3.33#*(4-2)"
+
