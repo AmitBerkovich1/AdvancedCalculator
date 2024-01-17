@@ -48,12 +48,10 @@ def infix_to_postfix(infix: str) -> list:
                 postfix.append(number)
             number = ''
         else:
-            if m.get_direction() == "right":
-                postfix.append(m.get_sign())
-            elif not stack or '(' in stack or m.get_power() > stack[-1].get_power():
+            if not stack and '(' in stack and m.get_power() > stack[-1].get_power():
                 stack.append(m)
             else:
-                while stack and (stack[-1] != '(' or stack[-1].get_power() >= m.get_power()):
+                while stack and stack[-1] != '(' and stack[-1].get_power() >= m.get_power():
                     postfix.append(stack.pop().get_sign())
                 stack.append(m)
             index += 1
@@ -82,7 +80,4 @@ def calculate_postfix(postfix: list) -> float:
             stack.append(result)
         index += 1
     return stack.pop()
-
-
-#my_infix = "5+3.33#*(4-2)"
 

@@ -1,32 +1,23 @@
 class MathematicalSign:
     """class of generic math sign"""
 
-    def __init__(self, sign: str, power: int, direction: str):
+    def __init__(self, sign: str, power: float, direction: str):
         """
         default is a plus sign
         :param sign: char represent the sign
         :param power: how powerful is the sign
         :param direction: right, left or middle
         """
-        self._sign = '+'
-        self._power = 1
-        self._direction = 'm'
-        self.set_sign(sign)
-        self.set_power(power)
-        self.set_direction(direction)
+        self._sign = sign
+        self._power = power
+        self._direction = direction
 
     def set_sign(self, sign: str):
         """
         :param sign: char represent the sign
         :return: void
         """
-        try:
-            sign = str(sign)
-        except TypeError as err:
-            print("Could not change sign")
-            print(err)
-        else:
-            self._sign = sign
+        self._sign = sign
 
     def set_power(self, power: int):
         """
@@ -36,10 +27,8 @@ class MathematicalSign:
         try:
             power = int(power)
         except TypeError as err:
-            print("must be a whole number")
+            print("must be a number")
             print(err)
-        if power < 1 or power > 6:
-            raise ValueError()
         self._power = power
 
     def set_direction(self, direction: str):
@@ -47,14 +36,6 @@ class MathematicalSign:
         :param direction: right, left or middle
         :return: void
         """
-        try:
-            direction = str(direction)
-        except TypeError as err:
-            print("must be a char")
-            print(err)
-        if direction != 'left' and direction != 'right' and direction != 'middle':
-            print("direction must be: left, right or middle")
-            raise ValueError()
         self._direction = direction
 
     def get_sign(self) -> chr:
@@ -63,7 +44,7 @@ class MathematicalSign:
         """
         return self._sign
 
-    def get_power(self) -> int:
+    def get_power(self) -> float:
         """
         :return: the power
         """
@@ -166,10 +147,9 @@ class Div(MathematicalSign):
         :param num2: second operand, must not be zero
         :return: first operand divide by second operand
         """
-        try:
-            return num1 / num2
-        except ZeroDivisionError as err:
-            print(err)
+        if num2 == 0:
+            raise ArithmeticError("Arithmetic Error: Divide By Zero")
+        return round(num1 / num2, 10)
 
 
 class Pow(MathematicalSign):
@@ -188,10 +168,9 @@ class Pow(MathematicalSign):
         :param num2: second operand
         :return: first operand powered by second operand
         """
-        try:
-            return num1 ** num2
-        except RuntimeError:
-            print("can not power zero by zero")
+        if (num1 < 0 and -1 < num2 < 1) or (num1 == 0 and num2 < 0):
+            raise ArithmeticError("Arithmetic Error: Complex Number")
+        return num1 ** num2
 
 
 class Avg(MathematicalSign):
@@ -210,7 +189,7 @@ class Avg(MathematicalSign):
         :param num2: second operand
         :return: average of first and second operand
         """
-        return (num1 + num2) / 2
+        return round((num1 + num2) / 2, 10)
 
 
 class Max(MathematicalSign):
@@ -271,10 +250,9 @@ class Modulo(MathematicalSign):
         :param num2: second operand
         :return: the rest of the division between the operands
         """
-        try:
-            return num1 % num2
-        except ZeroDivisionError as err:
-            print(err)
+        if num2 == 0:
+            raise ArithmeticError("Arithmetic Error: Divide By Zero")
+        return round(num1 % num2, 10)
 
 
 class Tilda(MathematicalSign):
@@ -312,6 +290,11 @@ class Factorial(MathematicalSign):
         :param num2: None!!!!
         :return: factorial of operand
         """
+        if num1 < 0:
+            raise ArithmeticError("Arithmetic Error: Can't factorized negative number")
+        if num1 % 1 != 0:
+            raise ArithmeticError("Arithmetic Error: Can't factorized floating number")
+        num1 = int(num1)
         fac = 1
         for i in range(1, num1 + 1):
             fac *= i
@@ -324,6 +307,8 @@ class HashTag(MathematicalSign):
 
     @staticmethod
     def do_action(num1: float, num2: None) -> float:
+        if num1 < 0:
+            raise ArithmeticError("Arithmetic Error: Can't HashTag negative number")
         num1 = str(num1)
         sum_of_digit = 0
         for digit in num1:
@@ -331,6 +316,24 @@ class HashTag(MathematicalSign):
                 digit = float(digit)
                 sum_of_digit += digit
         return sum_of_digit
+
+
+class UnaryMinus(MathematicalSign):
+    def __init__(self):
+        super().__init__('_', 10, 'left')
+
+    @staticmethod
+    def do_action(num1: float, num2: float) -> float:
+        return -1 * num1
+
+
+class LesserUnaryMinus(MathematicalSign):
+    def __init__(self):
+        super().__init__(';', 3.5, 'left')
+
+    @staticmethod
+    def do_action(num1: float, num2: float) -> float:
+        return -1 * num1
 
 
 def get_operator(sign: str) -> MathematicalSign:
@@ -363,12 +366,16 @@ def get_operator(sign: str) -> MathematicalSign:
             return Factorial()
         case '#':
             return HashTag()
+        case '_':
+            return UnaryMinus()
+        case ';':
+            return LesserUnaryMinus()
     raise ValueError()
 
 
 def is_operator(sign: str) -> bool:
     if (sign == '+' or sign == '-' or sign == '*' or sign == '/' or sign == '^'
             or sign == '@' or sign == '$' or sign == '&' or sign == '%' or sign == '%' or sign == '~' or sign == '!'
-            or sign == '#'):
+            or sign == '#' or sign == '_' or sign == ';'):
         return True
     return False
