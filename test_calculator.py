@@ -58,6 +58,18 @@ def test_simple_jibrish():
         cal.set_expression(check_input(cal.get_expression()))
 
 
+def test_failure_dot():
+    cal = Calculator('2+.5.2+32', 0)
+    with pytest.raises(SyntaxError):
+        cal.set_expression(check_input(cal.get_expression()))
+
+
+def test_failure_postfix():
+    cal = Calculator('(2) (2) +', 0)
+    with pytest.raises(SyntaxError):
+        cal.set_expression(check_input(cal.get_expression()))
+
+
 def test_simple_factorized_negative():
     cal = Calculator('4--3!', 0)
     cal.set_expression(check_input(cal.get_expression()))
@@ -290,3 +302,35 @@ def test_complicated16():
     postfix = infix_to_postfix(cal.get_expression())
     result = calculate_postfix(postfix)
     assert result == 1000
+
+
+def test_complicated17():
+    cal = Calculator('(2!+~---2!)!#@((-5!/12)^2)', 0)
+    cal.set_expression(check_input(cal.get_expression()))
+    postfix = infix_to_postfix(cal.get_expression())
+    result = calculate_postfix(postfix)
+    assert result == 53
+
+
+def test_complicated18():
+    cal = Calculator('12.34#!^0+(~-2!+4%10)^2', 0)
+    cal.set_expression(check_input(cal.get_expression()))
+    postfix = infix_to_postfix(cal.get_expression())
+    result = calculate_postfix(postfix)
+    assert result == 37
+
+
+def test_complicated19():
+    cal = Calculator('((((2+(2))^2)!#)$(5.5#^2))@-10%2', 0)
+    cal.set_expression(check_input(cal.get_expression()))
+    postfix = infix_to_postfix(cal.get_expression())
+    result = calculate_postfix(postfix)
+    assert result == 1
+
+
+def test_complicated20():
+    cal = Calculator('(1+2*3^4!)#+(-5/6%7)@(8$9&10)', 0)
+    cal.set_expression(check_input(cal.get_expression()))
+    postfix = infix_to_postfix(cal.get_expression())
+    result = calculate_postfix(postfix)
+    assert result == 68.0833333333
