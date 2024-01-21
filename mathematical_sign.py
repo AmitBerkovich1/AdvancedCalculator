@@ -170,7 +170,10 @@ class Pow(MathematicalSign):
         """
         if (num1 < 0 and -1 < num2 < 1) or (num1 == 0 and num2 < 0):
             raise ArithmeticError("Arithmetic Error: Complex Number")
-        return num1 ** num2
+        result = num1 ** num2
+        if isinstance(result,complex):
+            raise ArithmeticError("Arithmetic Error: Complex Number")
+        return result
 
 
 class Avg(MathematicalSign):
@@ -269,7 +272,7 @@ class Tilda(MathematicalSign):
         """
         :param num1: operand
         :param num2: None!!!!
-        :return: tilda of operand
+        :return: Neg of operand
         """
         return -1 * num1
 
@@ -302,11 +305,20 @@ class Factorial(MathematicalSign):
 
 
 class HashTag(MathematicalSign):
+    """ class of factorial sign, instance of math sign"""
     def __init__(self):
+        """
+        set parameters according to the attributions of HashTag
+        """
         super().__init__('#', 6, 'right')
 
     @staticmethod
     def do_action(num1: float, num2: None) -> float:
+        """
+        :param num1: operand
+        :param num2: None!!!!
+        :return: HashTag of operand, can't hashtag negative numbers
+        """
         if num1 < 0:
             raise ArithmeticError("Arithmetic Error: Can't HashTag negative number")
         num1 = str(num1)
@@ -319,20 +331,38 @@ class HashTag(MathematicalSign):
 
 
 class UnaryMinus(MathematicalSign):
+    """Strong Unary minus, occurs first every time, instance of math sign"""
     def __init__(self):
+        """
+        set parameters according to the attributions of Strong Unary Minus
+        """
         super().__init__('_', 10, 'left')
 
     @staticmethod
     def do_action(num1: float, num2: float) -> float:
+        """
+        :param num1: operand
+        :param num2: None!!!!
+        :return: Neg of operand
+        """
         return -1 * num1
 
 
 class LesserUnaryMinus(MathematicalSign):
+    """Weak Unary minus, occurs first every time, instance of math sign """
     def __init__(self):
+        """
+         set parameters according to the attributions of Weak Unary Minus
+        """
         super().__init__(';', 3.5, 'left')
 
     @staticmethod
     def do_action(num1: float, num2: float) -> float:
+        """
+        :param num1: operand
+        :param num2: None!!!!
+        :return: Neg of operand
+        """
         return -1 * num1
 
 
@@ -374,6 +404,10 @@ def get_operator(sign: str) -> MathematicalSign:
 
 
 def is_operator(sign: str) -> bool:
+    """
+    :param sign: a string that represent the char in the expression
+    :return: True if the char is an operator, False otherwise
+    """
     if (sign == '+' or sign == '-' or sign == '*' or sign == '/' or sign == '^'
             or sign == '@' or sign == '$' or sign == '&' or sign == '%' or sign == '%' or sign == '~' or sign == '!'
             or sign == '#' or sign == '_' or sign == ';'):
